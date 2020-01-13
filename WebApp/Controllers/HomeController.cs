@@ -28,9 +28,16 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Download()
         {
             var t1 = Thread.CurrentThread.ManagedThreadId;
-            var result=await DownloadAsync();
+            var task1 = DownloadAsync();
+            var task2 = DownloadAsync();
+            var task3 = DownloadAsync();
+
+            var r = await Task.WhenAll(task1, task2, task3);
             var t2 = Thread.CurrentThread.ManagedThreadId;
-            return Ok( $"{t1} ---> ["+result+$"] ---> {t2}");
+
+            var result = $"{t1} ---> [" + r[0] + " --> " + r[1] + " --> " + r[2] + $"] ---> {t2}";
+            _logger.LogInformation(result);
+            return Ok(result);
         }
 
         static private async Task<string> DownloadAsync()
