@@ -40,6 +40,21 @@ namespace WebApp.Controllers
             return Ok(result);
         }
 
+        [Route("api/download2")]
+        public async Task<IActionResult> Download2()
+        {
+            var t1 = Thread.CurrentThread.ManagedThreadId;
+            var r1 = await DownloadAsync().ConfigureAwait(false);
+            var r2 = await DownloadAsync().ConfigureAwait(false);
+
+ 
+            var t2 = Thread.CurrentThread.ManagedThreadId;
+
+            var result = $"{t1} ---> [" + r1 + " --> " + r2+ $"] ---> {t2}";
+            _logger.LogInformation(result);
+            return Ok(result);
+        }
+
         static private async Task<string> DownloadAsync()
         {
             var t1 = Thread.CurrentThread.ManagedThreadId;
