@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,14 +24,22 @@ namespace WebApp.Controllers
             return View();
         }
 
+        [Route("api/download")]
         public async Task<IActionResult> Download()
         {
-            await DownloadAsync();
+            var t1 = Thread.CurrentThread.ManagedThreadId;
+            var result=await DownloadAsync();
+            var t2 = Thread.CurrentThread.ManagedThreadId;
+            return Ok( $"{t1} ---> ["+result+$"] ---> {t2}");
         }
 
-        static private async Task DownloadAsync()
+        static private async Task<string> DownloadAsync()
         {
+            var t1 = Thread.CurrentThread.ManagedThreadId;
             await Task.Delay(1000);
+            var t2 = Thread.CurrentThread.ManagedThreadId;
+
+            return $" {t1} -> {t2}";
         }
 
         public IActionResult Privacy()
